@@ -6,7 +6,7 @@ import { ReactComponent as BeerLogo } from "../../assets/beer.svg";
 import { ReactComponent as DollarLogo } from "../../assets/dollar.svg";
 import { Expense } from "../../types/Expense";
 import { Skeleton } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Logo = (category: string) => {
   switch (category) {
@@ -23,11 +23,10 @@ const Logo = (category: string) => {
 
 export default function ExpenseCard({ data }: { data: Expense | undefined }) {
   return (
-    <NavLink to={`${data?.id}`} >
-      <div className='bg-almost-white py-4 px-8 rounded-md shadow-md flex justify-between items-center min-w-full'>
+      <Link to={`${data?.id}`} className='bg-almost-white py-4 px-8 rounded-md shadow-md flex justify-between items-center min-w-full'>
         <div className='flex items-center '>
           {data !== undefined && Logo(data!.category.name)}
-          {data === undefined && <Skeleton width={"4rem"} height={"4rem"} />}
+          {data === undefined && <Skeleton width={"4rem"} height={"3.875rem"} />}
 
           <div className='flex flex-col justify-center ml-4'>
             {data !== undefined && (
@@ -60,7 +59,6 @@ export default function ExpenseCard({ data }: { data: Expense | undefined }) {
             <Skeleton width={40} />
           </div>
         )}
-      </div>
-    </NavLink>
+      </Link>
   );
 }
