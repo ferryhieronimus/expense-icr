@@ -1,0 +1,50 @@
+import React from "react";
+import "./App.css";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import RootLayout from "./layouts/RootLayout";
+import Home from "./pages/Home";
+import { createTheme, ThemeProvider } from "@mui/material";
+import ExpenseDetail from "./pages/ExpenseDetail";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path='/' element={<RootLayout />}>
+      <Route path='/' element={<Home />} />
+      <Route path='/:id' element={<ExpenseDetail />} />
+    </Route>
+  )
+);
+
+const theme = createTheme({
+  components: {
+    MuiPaginationItem: {
+      styleOverrides: {
+        ellipsis: {
+          // Some CSS
+          backgroundColor: "#FFF",
+          borderRadius: '4px',
+          height: '32px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          userSelect: 'none'
+        },
+      },
+    },
+  },
+});
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
+}
+
+export default App;
