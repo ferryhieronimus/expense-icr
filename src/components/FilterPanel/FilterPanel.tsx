@@ -1,12 +1,18 @@
 import React from "react";
-import ExpensesRange from "./ExpensesRange";
+import ExpensesMin from "./ExpensesMin";
+import ExpensesMax from "./ExpensesMax";
 import { ReactComponent as HomeLogo } from "../../assets/house.svg";
 import { ReactComponent as FoodLogo } from "../../assets/pizza.svg";
 import { ReactComponent as CarLogo } from "../../assets/car.svg";
 import { ReactComponent as BeerLogo } from "../../assets/beer.svg";
 import { ReactComponent as FilterLogo } from "../../assets/filter.svg";
+import { useState, useContext } from 'react'
+import { ExpenseContext } from "../../contexts/ExpenseContext";
+
 
 export default function FilterPanel() {
+  const expenseContext = useContext(ExpenseContext)
+  
   return (
     <div className='bg-almost-white min-h-full p-4 rounded-md shadow-md flex flex-col wrap justify-between'>
       <div className='flex gap-2 items-center'>
@@ -18,7 +24,7 @@ export default function FilterPanel() {
       </div>
       <div className='flex flex-col gap-2'>
         <div className='flex items-center'>
-          <input type='checkbox' name='housing' id='housing' />
+          <input type='checkbox' name='housing' id='housing'/>
           <HomeLogo className='w-[24px] h-[24px] mx-2' />
           <label
             htmlFor='housing'
@@ -69,12 +75,12 @@ export default function FilterPanel() {
       <div className='flex justify-between items-center flex-wrap'>
         <div className='flex flex-col items-center'>
           <label className='font-inter italic font-medium text-xs'>Min</label>
-          <ExpensesRange />
+          <ExpensesMin />
         </div>
         <div className='border-t-2 w-4 border-slate-500' />
         <div className='flex flex-col items-center'>
           <label className='font-inter italic font-medium text-xs'>Max</label>
-          <ExpensesRange />
+          <ExpensesMax />
         </div>
       </div>
     </div>

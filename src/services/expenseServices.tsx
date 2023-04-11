@@ -7,20 +7,9 @@ import { Expense } from "../types/Expense";
 const baseUrl =
   "https://utbmu5o3smxuba2iverkgqqj440temhn.lambda-url.ap-southeast-1.on.aws/expenses";
 
-export const getExpensesData = async (
-  page?: number,
-  min_price?: number,
-  max_price?: number,
-  category_id?: string
-) => {
+export const getExpensesData = async (params: any) => {
   const config = {
-    params: {
-      min_price,
-      max_price,
-      category_id,
-      limit: 4,
-      page,
-    },
+    params: params
   };
   const response = await axios.get<ExpenseDTO>(baseUrl, config);
   return response.data;

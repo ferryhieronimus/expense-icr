@@ -15,15 +15,11 @@ const PaginationComponent = ({ paging }: { paging: Paging | undefined }) => {
   useEffect(() => {
     setPageCount(paging?.pageCount);
   });
-
-  console.log(page);
   
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
-    expenseContext.setData([]);
-    getExpensesData(value).then((expenses) => {
-      expenseContext.setData(expenses.data);
-    });
+    expenseContext.params.set('page', value.toString());
+    expenseContext.setParams(expenseContext.params);
   };
 
   return (
@@ -31,7 +27,7 @@ const PaginationComponent = ({ paging }: { paging: Paging | undefined }) => {
       <Pagination
         count={pageCount}
         onChange={handleChange}
-        page={page}
+        page={Number(expenseContext.params.get('page'))}
         boundaryCount={1}
         renderItem={(item) => (
           <PaginationItem
