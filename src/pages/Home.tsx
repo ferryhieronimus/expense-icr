@@ -19,13 +19,16 @@ export default function Home() {
   const expenseContext = useContext(ExpenseContext);
 
   useEffect(() => {
+    expenseContext.params.forEach((key, value) => {
+      expenseContext.params.set(value, key);
+    })
+    expenseContext.params.set("limit", "4");
     getCurrentExpenses().then((total) => {
       setTotal(total);
     });
   }, []);
 
-  useEffect(() => {
-    expenseContext.params.set("limit", "4");
+  useEffect(() => {    
     setExpenses(null);
     getExpensesData(expenseContext.params)
       .then((expensesData) => {

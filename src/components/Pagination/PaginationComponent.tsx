@@ -5,15 +5,18 @@ import Stack from "@mui/material/Stack";
 import { useState } from "react";
 import { Paging } from "../../types/Paging";
 import { ExpenseContext } from "../../contexts/ExpenseContext";
-import { getExpensesData } from "../../services/expenseServices";
 
 const PaginationComponent = ({ paging }: { paging: Paging | undefined }) => {
   const expenseContext = useContext(ExpenseContext);
   const [pageCount, setPageCount] = useState<number | undefined>(1);
+  const [page, setPage] = useState<number>(1);
 
   useEffect(() => {
+    if (expenseContext.params.has('page')) {
+      setPage(Number(expenseContext.params!.get('page')))
+    }
     setPageCount(paging?.pageCount);
-  });
+  }, [paging]);
   
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     expenseContext.params.set('page', value.toString());
@@ -25,7 +28,7 @@ const PaginationComponent = ({ paging }: { paging: Paging | undefined }) => {
       <Pagination
         count={pageCount}
         onChange={handleChange}
-        page={Number(expenseContext.params.get('page'))}
+        page={page}
         boundaryCount={1}
         renderItem={(item) => (
           <PaginationItem

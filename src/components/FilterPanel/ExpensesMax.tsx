@@ -5,16 +5,15 @@ import { ExpenseContext } from "../../contexts/ExpenseContext";
 
 export default function ExpensesMax() {
   const expenseContext = useContext(ExpenseContext);
-  const [max, setMax] = useState(expenseContext.params.get("max_price"));
+  const [max, setMax] = useState(expenseContext.params.get("max_price") || "");
 
   useEffect(() => {
     if (max) {
       expenseContext.params.set("max_price", max);
-      expenseContext.setParams(expenseContext.params);
     } else {
       expenseContext.params.delete("max_price");
-      expenseContext.setParams(expenseContext.params);
     }
+    expenseContext.setParams(expenseContext.params);
   }, [max]);
 
   return (

@@ -5,16 +5,15 @@ import { ExpenseContext } from "../../contexts/ExpenseContext";
 
 export default function ExpensesMin() {
   const expenseContext = useContext(ExpenseContext);
-  const [min, setMin] = useState(expenseContext.params.get("min_price"));
+  const [min, setMin] = useState(expenseContext.params.get("min_price") || "");
 
   useEffect(() => {
     if (min) {
       expenseContext.params.set("min_price", min);
-      expenseContext.setParams(expenseContext.params);
     } else {
       expenseContext.params.delete("min_price");
-      expenseContext.setParams(expenseContext.params);
     }
+    expenseContext.setParams(expenseContext.params);
   }, [min]);
 
   return (
