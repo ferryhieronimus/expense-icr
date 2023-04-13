@@ -8,7 +8,6 @@ export default function ExpensesMin() {
   const [min, setMin] = useState(expenseContext.params.get("min_price"));
 
   useEffect(() => {
-    expenseContext.params.set("page", "1");
     if (min) {
       expenseContext.params.set("min_price", min);
       expenseContext.setParams(expenseContext.params);

@@ -8,7 +8,6 @@ export default function ExpensesMax() {
   const [max, setMax] = useState(expenseContext.params.get("max_price"));
 
   useEffect(() => {
-    expenseContext.params.set("page", "1");
     if (max) {
       expenseContext.params.set("max_price", max);
       expenseContext.setParams(expenseContext.params);

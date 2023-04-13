@@ -9,7 +9,6 @@ import { getExpensesData } from "../../services/expenseServices";
 
 const PaginationComponent = ({ paging }: { paging: Paging | undefined }) => {
   const expenseContext = useContext(ExpenseContext);
-  const [page, setPage] = useState<number>(1);
   const [pageCount, setPageCount] = useState<number | undefined>(1);
 
   useEffect(() => {
@@ -17,7 +16,6 @@ const PaginationComponent = ({ paging }: { paging: Paging | undefined }) => {
   });
   
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
     expenseContext.params.set('page', value.toString());
     expenseContext.setParams(expenseContext.params);
   };
