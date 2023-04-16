@@ -7,6 +7,7 @@ import { ReactComponent as FoodLogo } from "../assets/pizza.svg";
 import { ReactComponent as CarLogo } from "../assets/car.svg";
 import { ReactComponent as BeerLogo } from "../assets/beer.svg";
 import { ReactComponent as DollarLogo } from "../assets/dollar.svg";
+import { useNavigate } from "react-router-dom";
 import moment from "moment";
 
 const Logo = (category: string) => {
@@ -18,7 +19,7 @@ const Logo = (category: string) => {
     case "Housing":
       return <HomeLogo className='w-[45px] h-[45px] mr-4' />;
     case "Personal Spending":
-      return <BeerLogo  className='w-[45px] h-[45px] mr-4'/>;
+      return <BeerLogo className='w-[45px] h-[45px] mr-4' />;
   }
 };
 
@@ -29,6 +30,7 @@ export default function ExpenseDetail() {
   const [createdAt, setCreatedAt] = useState<Date>();
   const [desc, setDesc] = useState<string>();
   const [category, setCategory] = useState<string>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getExpensesDetails(id.id!).then((expenseDetails) => {
@@ -41,8 +43,16 @@ export default function ExpenseDetail() {
   }, []);
 
   return (
-    <div className='flex justify-center items-center min-w-[50%] max-w-[50%]'>
-      <div className='bg-almost-white min-h-full min-w-full p-12 rounded-md shadow-md flex flex-col wrap justify-between'>
+    <div className='grid grid-cols-4'>
+      <div>
+        <div
+          className='font-inter font-bold text-white text-lg cursor-pointer'
+          onClick={() => navigate(-1)}
+        >
+          &lt;- Back
+        </div>
+      </div>
+      <div className='bg-almost-white col-span-2 max-w-xl min-h-full min-w-full p-12 rounded-md shadow-md flex flex-col wrap justify-between'>
         <div className='flex justify-between items-center font-inter'>
           <div className='font-inter font-bold flex justify-center items-center text-sm'>
             {Logo(category!)}
