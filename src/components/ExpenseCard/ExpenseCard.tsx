@@ -25,6 +25,7 @@ const Logo = (category: string) => {
 
 export default function ExpenseCard({ data }: { data: Expense | undefined }) {
   const [name, setName] = useState<string>("");
+
   useEffect(() => {
     if (data !== undefined) {
       getExpensesDetails(data!.id).then((expenseDetail) =>
@@ -32,17 +33,22 @@ export default function ExpenseCard({ data }: { data: Expense | undefined }) {
       );
     }
   }, []);
+
   return (
     <Link
       to={`${data?.id}`}
+      state={data}
       className='bg-almost-white py-4 px-8 rounded-md shadow-md flex justify-between items-center min-w-full'
     >
       <div className='flex items-center '>
-        {data !== undefined && Logo(data!.category.name)}
-        {data === undefined && <Skeleton width={"4rem"} height={"3.875rem"} />}
+        {data !== undefined ? (
+          Logo(data!.category.name)
+        ) : (
+          <Skeleton width={"4rem"} height={"3.875rem"} />
+        )}
 
         <div className='flex flex-col justify-center ml-4'>
-          {data !== undefined && (
+          {data !== undefined ? (
             <>
               <div className='font-inter text-sm'>{data!.category.name}</div>
               <div className='font-inter font-medium text-md'>
@@ -50,8 +56,7 @@ export default function ExpenseCard({ data }: { data: Expense | undefined }) {
                 {name === "" && <Skeleton width={"6rem"} />}
               </div>
             </>
-          )}
-          {data === undefined && (
+          ) : (
             <>
               <Skeleton width={"6rem"} />
               <Skeleton width={"6rem"} />

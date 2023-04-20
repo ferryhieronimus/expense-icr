@@ -1,13 +1,11 @@
-import React from "react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { getExpensesDetails } from "../services/expenseServices";
 import { ReactComponent as HomeLogo } from "../assets/house.svg";
 import { ReactComponent as FoodLogo } from "../assets/pizza.svg";
 import { ReactComponent as CarLogo } from "../assets/car.svg";
 import { ReactComponent as BeerLogo } from "../assets/beer.svg";
 import { ReactComponent as DollarLogo } from "../assets/dollar.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 
 const Logo = (category: string) => {
