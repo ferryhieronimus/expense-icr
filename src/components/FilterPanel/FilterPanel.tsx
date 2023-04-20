@@ -7,16 +7,14 @@ import { ReactComponent as BeerLogo } from "../../assets/beer.svg";
 import { ReactComponent as FilterLogo } from "../../assets/filter.svg";
 import { useState, useContext, useEffect } from "react";
 import { ExpenseContext } from "../../contexts/ExpenseContext";
+import { Checkbox } from "../../types/Checkbox";
 
 export default function FilterPanel() {
   const expenseContext = useContext(ExpenseContext);
-  const [isHousingChecked, setIsHousingChecked] = useState<boolean>(false);
-  const [isTransportChecked, setIsTransportChecked] = useState<boolean>(false);
-  const [isFoodChecked, setIsFoodChecked] = useState<boolean>(false);
-  const [isPersonalChecked, setIsPersonalChecked] = useState<boolean>(false);
+  const [isChecked, setIsChecked] = useState<Checkbox>({} as Checkbox);
   const [checkBox, setCheckBox] = useState<string[]>(
     expenseContext.params.getAll("category_id").length !== 0
-      ? expenseContext.params.getAll("category_id")[0]?.split(",")
+      ? expenseContext.params.get("category_id")!.split(",")
       : []
   );
 
@@ -25,12 +23,24 @@ export default function FilterPanel() {
   const FoodCategoryID = "f12399a7-302c-452a-89d8-5ec21c4514e8";
   const PersonalCategoryID = "6bcd7235-717e-43b9-bed1-13e0b04e4c0b";
 
+  const getID = (id: string) => {
+    switch (id) {
+      case HousingCategoryID:
+        return "housing";
+      case TransportCategoryID:
+        return "transportation";
+      case FoodCategoryID:
+        return "food";
+      case PersonalCategoryID:
+        return "personalSpending";
+      default:
+        return "";
+    }
+  };
+
   useEffect(() => {
     checkBox.forEach((id) => {
-      if (id === HousingCategoryID) setIsHousingChecked(true);
-      if (id === TransportCategoryID) setIsTransportChecked(true);
-      if (id === FoodCategoryID) setIsFoodChecked(true);
-      if (id === PersonalCategoryID) setIsPersonalChecked(true);
+      setIsChecked(isChecked => ({ ...isChecked, [getID(id)]: true }));
     });
 
     if (checkBox.length !== 0) {
@@ -41,40 +51,19 @@ export default function FilterPanel() {
     expenseContext.setParams(expenseContext.params);
   }, [checkBox]);
 
-  const handleChangeHousing = () => {
-    if (checkBox?.includes(HousingCategoryID)) {
-      setCheckBox(checkBox.filter((id) => id !== HousingCategoryID));
+  const handleChangeCheckbox = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    ID: string
+  ) => {
+    if (checkBox.includes(ID)) {
+      setCheckBox(checkBox.filter((id) => id !== ID));
     } else {
-      setCheckBox(checkBox.concat(HousingCategoryID));
+      setCheckBox(checkBox.concat(ID));
     }
-    setIsHousingChecked(!isHousingChecked);
-  };
-
-  const handleChangeTransport = () => {
-    if (checkBox?.includes(TransportCategoryID)) {
-      setCheckBox(checkBox.filter((id) => id !== TransportCategoryID));
-    } else {
-      setCheckBox(checkBox.concat(TransportCategoryID));
-    }
-    setIsTransportChecked(!isTransportChecked);
-  };
-
-  const handleChangeFood = () => {
-    if (checkBox.includes(FoodCategoryID)) {
-      setCheckBox(checkBox.filter((id) => id !== FoodCategoryID));
-    } else {
-      setCheckBox(checkBox.concat(FoodCategoryID));
-    }
-    setIsFoodChecked(!isFoodChecked);
-  };
-
-  const handleChangePersonal = () => {
-    if (checkBox.includes(PersonalCategoryID)) {
-      setCheckBox(checkBox.filter((id) => id !== PersonalCategoryID));
-    } else {
-      setCheckBox(checkBox.concat(PersonalCategoryID));
-    }
-    setIsPersonalChecked(!isPersonalChecked);
+    setIsChecked({
+      ...isChecked,
+      [e.target.name]: !isChecked[e.target.name as keyof Checkbox],
+    });
   };
 
   return (
@@ -92,8 +81,8 @@ export default function FilterPanel() {
             type='checkbox'
             name='housing'
             id='housing'
-            checked={isHousingChecked}
-            onChange={handleChangeHousing}
+            checked={isChecked.housing ?? false}
+            onChange={(e) => handleChangeCheckbox(e, HousingCategoryID)}
           />
           <HomeLogo className='w-[24px] h-[24px] mx-2' />
           <label
@@ -108,8 +97,8 @@ export default function FilterPanel() {
             type='checkbox'
             name='food'
             id='food'
-            checked={isFoodChecked}
-            onChange={handleChangeFood}
+            checked={isChecked.food ?? false}
+            onChange={(e) => handleChangeCheckbox(e, FoodCategoryID)}
           />
           <FoodLogo className='w-[24px] h-[24px] mx-2' />
           <label
@@ -124,8 +113,8 @@ export default function FilterPanel() {
             type='checkbox'
             name='transportation'
             id='transportation'
-            checked={isTransportChecked}
-            onChange={handleChangeTransport}
+            checked={isChecked.transportation ?? false}
+            onChange={(e) => handleChangeCheckbox(e, TransportCategoryID)}
           />
           <CarLogo className='w-[24px] h-[24px] mx-2' />
           <label
@@ -138,14 +127,14 @@ export default function FilterPanel() {
         <div className='flex items-center'>
           <input
             type='checkbox'
-            name='personal-spending'
-            id='personal-spending'
-            checked={isPersonalChecked}
-            onChange={handleChangePersonal}
+            name='personalSpending'
+            id='personalSpending'
+            checked={isChecked.personalSpending ?? false}
+            onChange={(e) => handleChangeCheckbox(e, PersonalCategoryID)}
           />
           <BeerLogo className='w-[24px] h-[24px] mx-2' />
           <label
-            htmlFor='personal-spending'
+            htmlFor='personalSpending'
             className='font-inter font-medium text-xs cursor-pointer select-none'
           >
             Personal Spending
@@ -161,7 +150,7 @@ export default function FilterPanel() {
           <label className='font-inter italic font-medium text-xs'>Min</label>
           <ExpensesMin />
         </div>
-        <div className='border-t-2 w-4 border-slate-500 mt-4'/>
+        <div className='border-t-2 w-4 border-slate-500 mt-4' />
         <div className='flex flex-col items-center'>
           <label className='font-inter italic font-medium text-xs'>Max</label>
           <ExpensesMax />
