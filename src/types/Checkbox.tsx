@@ -1,7 +1,6 @@
 export interface Checkbox {
-    housing: boolean;
-    food: boolean;
-    transportation: boolean;
-    personalSpending: boolean;
+    id: string,
+    name: string,
+    isChecked: boolean;
 }
   

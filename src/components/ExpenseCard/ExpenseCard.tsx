@@ -1,4 +1,3 @@
-import React from "react";
 import { ReactComponent as HomeLogo } from "../../assets/house.svg";
 import { ReactComponent as FoodLogo } from "../../assets/pizza.svg";
 import { ReactComponent as CarLogo } from "../../assets/car.svg";
@@ -38,7 +37,7 @@ export default function ExpenseCard({ data }: { data: Expense | undefined }) {
     <Link
       to={`${data?.id}`}
       state={data}
-      className='bg-almost-white py-4 px-8 rounded-md shadow-md flex justify-between items-center min-w-full'
+      className='bg-almost-white py-4 px-8 rounded-md shadow-md flex justify-between items-center min-w-full overflow-auto'
     >
       <div className='flex items-center '>
         {data !== undefined ? (

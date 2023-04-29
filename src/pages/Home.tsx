@@ -6,60 +6,59 @@ import {
   getCurrentExpenses,
   getExpensesData,
 } from "../services/expenseServices";
-import { useState, useEffect } from "react";
-import { TotalExpenses } from "../types/TotalExpenses";
-import { Paging } from "../types/Paging";
-import { Expense } from "../types/Expense";
-import { useExpense } from "../hooks/useExpenseContext";
+import { useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
-  const [total, setTotal] = useState<TotalExpenses>({ total: 0 });
-  const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [paging, setPaging] = useState<Paging>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { params } = useExpense();
+  const [params, setParams] = useSearchParams();
 
   const fetchExpenses = async () => {
-    setIsLoading(true);
     try {
+      params.set("limit", "4");
+      setParams(params);
       const expensesData = await getExpensesData(params);
-      setPaging(expensesData.paging);
-      setExpenses(expensesData.data);
+      return expensesData;
     } catch (error) {
       console.error(error);
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const fetchCurrentExpenses = async () => {
-    const total = await getCurrentExpenses();
-    setTotal(total);
+    const total = await getCurrentExpenses();    
+    return total;
   };
 
-  useEffect(() => {
-    params.set("limit", "4");
-    fetchCurrentExpenses();
-  }, []);
+  const expensesQuery = useQuery({
+    queryKey: [
+      "expenses",
+      params.get("page"),
+      params.get("category_id"),
+      params.get("max_price"),
+      params.get("min_price"),
+    ],
+    queryFn: fetchExpenses,
+  });
 
-  useEffect(() => {
-    fetchExpenses();
-  }, [params]);
+  const totalExpenseQuery = useQuery({
+    queryKey: ["totalExpenses"],
+    queryFn: fetchCurrentExpenses,
+  });
+
+  console.log("mounted");
 
   return (
     <div className='grid grid-cols-3 gap-8 '>
       <div className='grid grid-rows-4 gap-8 col-span-2'>
-        {isLoading &&
+        {expensesQuery.isLoading &&
           [1, 2, 3, 4].map((key) => <ExpenseCard data={undefined} key={key} />)}
-        {!isLoading &&
-          expenses.map((expense) => (
+        {!expensesQuery.isLoading &&
+          expensesQuery.data?.data.map((expense) => (
             <ExpenseCard data={expense} key={expense.id} />
           ))}
       </div>
       <div className='grid grid-rows-4 gap-8'>
         <div className='row-span-1'>
-          <CurrentExpense total={total} />
+          <CurrentExpense total={totalExpenseQuery.data} />
         </div>
         <div className='row-span-3'>
           <FilterPanel />
@@ -67,7 +66,7 @@ export default function Home() {
       </div>
       <div className='col-span-2'>
         <div className='flex justify-center'>
-          <PaginationComponent paging={paging} />
+          <PaginationComponent paging={expensesQuery.data?.paging} />
         </div>
       </div>
     </div>

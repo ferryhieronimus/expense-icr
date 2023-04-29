@@ -1,5 +1,3 @@
-import React from "react";
-import "./App.css";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -10,6 +8,10 @@ import RootLayout from "./layouts/RootLayout";
 import Home from "./pages/Home";
 import { createTheme, ThemeProvider } from "@mui/material";
 import ExpenseDetail from "./pages/ExpenseDetail";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,14 +27,13 @@ const theme = createTheme({
     MuiPaginationItem: {
       styleOverrides: {
         ellipsis: {
-          // Some CSS
           backgroundColor: "#FFF",
-          borderRadius: '4px',
-          height: '32px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          userSelect: 'none'
+          borderRadius: "4px",
+          height: "32px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          userSelect: "none",
         },
       },
     },
@@ -42,7 +43,10 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

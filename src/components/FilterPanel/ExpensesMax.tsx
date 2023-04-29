@@ -1,19 +1,19 @@
 import OutlinedInput from "@mui/material/OutlinedInput";
 import FormControl from "@mui/material/FormControl";
 import { useState, useContext, useEffect } from "react";
-import { ExpenseContext } from "../../contexts/ExpenseContext";
+import { useSearchParams } from "react-router-dom";
 
 export default function ExpensesMax() {
-  const expenseContext = useContext(ExpenseContext);
-  const [max, setMax] = useState(expenseContext.params.get("max_price") || "");
+  const [params, setParams] = useSearchParams();
+  const [max, setMax] = useState(params.get("max_price") || "");
 
   useEffect(() => {
     if (max) {
-      expenseContext.params.set("max_price", max);
+      params.set("max_price", max);
     } else {
-      expenseContext.params.delete("max_price");
+      params.delete("max_price");
     }
-    expenseContext.setParams(expenseContext.params);
+    setParams(params);
   }, [max]);
 
   return (

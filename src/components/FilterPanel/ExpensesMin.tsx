@@ -1,19 +1,19 @@
 import OutlinedInput from "@mui/material/OutlinedInput";
 import FormControl from "@mui/material/FormControl";
 import { useState, useContext, useEffect } from "react";
-import { ExpenseContext } from "../../contexts/ExpenseContext";
+import { useSearchParams } from "react-router-dom";
 
 export default function ExpensesMin() {
-  const expenseContext = useContext(ExpenseContext);
-  const [min, setMin] = useState(expenseContext.params.get("min_price") || "");
+  const [params, setParams] = useSearchParams();
+  const [min, setMin] = useState(params.get("min_price") || "");
 
   useEffect(() => {
     if (min) {
-      expenseContext.params.set("min_price", min);
+      params.set("min_price", min);
     } else {
-      expenseContext.params.delete("min_price");
+      params.delete("min_price");
     }
-    expenseContext.setParams(expenseContext.params);
+    setParams(params);
   }, [min]);
 
   return (
